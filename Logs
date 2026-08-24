@@ -2,10 +2,10 @@ v3.2.1 - FIX UPDATE: Correção do salvamento de FPS/Gráficos, otimização da 
 v3.2 - THE SYSTEM UPDATE: Implementação de Termos de Uso e Consentimento inicial integrados ao LocalStorage para salvar preferências de forma segura.
 v3.1 - THE EVOLUTION UPDATE: Gráficos evoluídos! Mapa expandido em 33% (2560x1440), novas salas, corredores expandidos, efeitos avançados de partículas, iluminação dinâmica aprimorada, texturas HD e reflexos.
 v3.0 - THE BIG UPDATE: Modo Ultra Graphics adicionado! Introdução de lighting dinâmico, partículas avançadas, efeitos visuais de tela (*Screen Shake*, *Chromatic Aberration* e vinheta de medo), texturas procedurais, sombras e reflexões.
-v2.8: Adicionada opção de simular a velocidade do bug de monitores 144Hz/240Hz para qualquer jogador.
-v2.7.2: Inclusão de opção no menu para ativar/desativar o Delta Time.
+v2.8 - 2.9: Adicionada opção de simular a velocidade do bug de monitores 144Hz/240Hz para qualquer jogador.
+v2.7.2 - 2.7.9: Inclusão de opção no menu para ativar/desativar o Delta Time. Fix de alguns bugs.
 v2.7: Implementação do Delta Time para padronizar e manter a velocidade do jogo idêntica em monitores de 60Hz ou superiores.
-v2.6.2 - v2.6: Correção de múltiplos bugs críticos de movimentação, estabilização de colisões físicas e melhorias gerais de estabilidade do game loop.
+v2.6 - v2.6.9: Correção de múltiplos bugs críticos de movimentação, estabilização de colisões físicas e melhorias gerais de estabilidade do game loop.
 v2.5: Correção de bugs de performance e otimização de renderização no Canvas 2D.
 v2.4: Introdução de ajustes de qualidade gráfica para melhor compatibilidade com dispositivos de menor desempenho, animações de abertura no elevador e salas aleatórias.
 v2.0 - v2.3: Correção de bugs estruturais, adição de modo tela cheia e suporte completo a controles de toque para dispositivos móveis (Touch Controls).
