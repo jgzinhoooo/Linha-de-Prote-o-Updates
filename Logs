@@ -1,3 +1,4 @@
+v3.2.2 - v3.3.3 Draw System: Solução de bugs graficos, e mudança completa da estrutura do jogo para HTML -> CSS -> JavaScript.
 v3.2.1 - FIX UPDATE: Correção do salvamento de FPS/Gráficos, otimização da leitura de preferências do LocalStorage e ajuste fino do spawn no estacionamento.
 v3.2 - THE SYSTEM UPDATE: Implementação de Termos de Uso e Consentimento inicial integrados ao LocalStorage para salvar preferências de forma segura.
 v3.1 - THE EVOLUTION UPDATE: Gráficos evoluídos! Mapa expandido em 33% (2560x1440), novas salas, corredores expandidos, efeitos avançados de partículas, iluminação dinâmica aprimorada, texturas HD e reflexos.
