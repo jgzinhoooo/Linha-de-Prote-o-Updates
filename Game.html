@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Linha de Proteção - Curta Interativo (v3.2.3 - Modulada)</title>
+    <!-- Puxando o arquivo de estilos -->
+    <link rel="stylesheet" href="Style.css">
+</head>
+<body onclick="startMenuMusicOnce()">
+
+    <div id="game-container">
+        <button id="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+
+        <div id="terms-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <h2 style="color: #ff2d3f; margin-top: 0;">Acesso ao Sistema</h2>
+                <p style="font-size: 1rem; color: #ccc;">Este jogo utiliza o armazenamento local do seu navegador para salvar preferências gráficas, áudio e acessos.</p>
+                <p style="font-size: 0.85rem; color: #888;">Nenhum dado pessoal é rastreado ou compartilhado. Ao continuar, você concorda com este funcionamento básico.</p>
+                <button class="btn" style="width: 100%; margin-top: 20px; background: #4CAF50;" onclick="acceptTerms()">Concordar e Acessar</button>
+            </div>
+        </div>
+
+        <div id="screen-instructions" class="screen">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <h1>Linha de proteção <span style="font-size: 1.2rem; color: #888;">(v3.2.3)</span></h1>
+                <button class="btn logs-btn" onclick="toggleLogs(true)">Logs (GitHub)</button>
+            </div>
+            <p>Você controla uma <b>Mulher (bolinha branca)</b> que acabou de terminar seu relacionamento.<br>
+            Use o <b>Joystick</b> ou <b>WASD/Setas</b> para andar.<br>
+            Pressione <b>[E] ou E (Botão mobile)</b> nas portas ou elevador.</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; z-index: 60; position: relative;">
+                <button class="btn" onclick="initGame()">Começar Curta</button>
+                <button class="btn" style="background: #2a2a35;" onclick="toggleOptions(true)">Opções</button>
+            </div>
+        </div>
+
+        <div id="options-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <h2 style="color: #ff2d3f; margin-top: 0;">Configurações</h2>
+                <div class="option-group">
+                    <label>Volume:</label>
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" oninput="updateVolume(this.value)">
+                </div>
+                <div class="option-group">
+                    <label>Gráficos:</label>
+                    <select id="graphics-select" onchange="updateGraphics(this.value)">
+                        <option value="ultra">ULTRA 🔥 (Todos os efeitos!)</option>
+                        <option value="high">Luxo (Neon e Partículas)</option>
+                        <option value="medium">Médio (Equilibrado)</option>
+                        <option value="low">Baixo (Performance)</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label title="Altera a velocidade geral simulando monitores mais rápidos.">Velocidade (Hz):</label>
+                    <select id="speed-select" onchange="updateSpeedMode(this.value)">
+                        <option value="sync">Sincronizado (Normal)</option>
+                        <option value="144">Simular 144Hz (Rápido!)</option>
+                        <option value="240">Simular 240Hz (Insano!)</option>
+                    </select>
+                </div>
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="toggleOptions(false)">Salvar</button>
+            </div>
+        </div>
+
+        <div id="logs-modal" class="hidden">
+            <div class="modal-content" style="text-align: left; background: #0d0d12;">
+                <h2 style="color: #ff2d3f; margin-top:0;">Logs de atualizações (Online)</h2>
+                <div id="logs-content-box" style="font-size: 0.95rem; color: #ccc; max-height: 50vh; overflow-y: auto; padding-right: 10px; line-height: 1.5;">
+                    <!-- Inserido dinamicamente via JS -->
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn" style="padding: 0.5rem 1.2rem; font-size: 0.9rem;" onclick="toggleLogs(false)">Fechar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="keypad-modal" class="modal-overlay hidden">
+            <div class="modal-content" style="max-width: 320px; text-align: center;">
+                <h2 style="color: #ff2d3f; margin-top: 0;">Painel de Acesso</h2>
+                <p style="font-size: 0.9rem; color: #888; margin-bottom: 15px;">Esta porta exige senha:</p>
+                <input type="number" id="door-code" class="modal-input" placeholder="****" onkeypress="if(event.key === 'Enter') checkDoorCode()">
+                <button class="btn" style="width: 100%; margin: 5px 0; padding: 0.8rem;" onclick="checkDoorCode()">Entrar</button>
+                <button class="btn" style="width: 100%; margin: 5px 0; padding: 0.8rem; background: #444;" onclick="closeKeypad()">Voltar</button>
+            </div>
+        </div>
+
+        <div id="phone-modal" class="modal-overlay hidden">
+            <div class="modal-content" style="border-color: #2b2b2b; max-width: 340px; text-align: center;">
+                <h2 style="color: #fff; margin-top: 0;">Emergência</h2>
+                <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 15px;">Disque 180 ou escolha o modo de fuga:</p>
+                <input type="number" id="phone-code" class="modal-input" style="color: #fff;" placeholder="***" onkeypress="if(event.key === 'Enter') callPolice()">
+                <button class="btn" style="width: 100%; margin: 5px 0; padding: 0.8rem; background: #4CAF50;" onclick="callPolice()">Ligar</button>
+                <button class="btn" style="width: 100%; margin: 5px 0; padding: 0.8rem; background: #ff2d3f;" onclick="startInfiniteEscape()">Pular / Fuga Infinita (Hardcore)</button>
+            </div>
+        </div>
+
+        <div id="touch-controls">
+            <div id="joystick-base"><div id="joystick-stick"></div></div>
+            <div id="action-btn">E</div>
+        </div>
+
+        <div id="screen-game" class="screen hidden" style="padding: 0; background: transparent; z-index: 5;">
+            <canvas id="gameCanvas" width="1920" height="1080"></canvas>
+            <div id="tension-overlay" class="tension-overlay"></div>
+            <div id="fear-vignette" class="fear-vignette" style="display: none;"></div>
+            <div id="dialogue-box" class="hidden">
+                <div id="dialogue-speaker" style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;"></div>
+                <div id="dialogue-text"></div>
+                <div id="dialogue-choices" class="choices-container"></div>
+            </div>
+        </div>
+
+        <div id="screen-end-bad" class="screen hidden">
+            <h1>Ele te alcançou...</h1>
+            <p><b>Não tente lidar com o perigo sozinha.</b> O isolamento é a maior arma do agressor.</p>
+            <div class="info-card">
+                <b style="color: #ff2d3f; font-size: 1.3rem;">Ligue 180 ou 190</b><br>Central de Atendimento à Mulher. Gratuito e 24h.
+            </div>
+            <button class="btn" onclick="location.reload()">Tentar Novamente</button>
+        </div>
+
+        <div id="screen-end-good" class="screen hidden">
+            <h1 class="good-title">Você Conseguiu Ajuda!</h1>
+            <p>A polícia chegou a tempo e o ciclo de violência foi quebrado.</p>
+            <div class="info-card">
+                <b style="color: #ff2d3f; font-size: 1.3rem;">Ligue 180</b><br>Você não está sozinha.
+            </div>
+            <button class="btn" onclick="location.reload()">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <!-- Puxando o motor do jogo em JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
