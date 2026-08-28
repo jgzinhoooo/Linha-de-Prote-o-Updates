@@ -1,5 +1,13 @@
+* {
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
 body {
     margin: 0;
+    padding: 0;
     background-color: #030305;
     color: #fff;
     font-family: 'Inter', sans-serif;
@@ -8,44 +16,13 @@ body {
     align-items: center;
     min-height: 100vh;
     height: 100vh;
+    width: 100vw;
     overflow: hidden;
+    position: fixed;
     flex-direction: column;
     touch-action: none;
 }
-* {
-    box-sizing: border-box;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-}
 
-html, body {
-    width: 100vw;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    position: fixed;
-    background-color: #000;
-    touch-action: none;
-}
-
-#game-container {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Garanta que canvas ou imagens do jogo se ajustem à tela */
-canvas, img, video {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
 #game-container {
     position: relative;
     width: 100vw;
@@ -205,7 +182,6 @@ canvas {
     max-width: 800px;
 }
 
-/* Modais com pointer-events garantidos */
 #logs-modal, .modal-overlay {
     position: absolute;
     inset: 0;
@@ -268,7 +244,6 @@ canvas {
     width: 55%;
 }
 
-/* Spinner de Carregamento */
 .spinner-container {
     display: flex;
     flex-direction: column;
@@ -292,7 +267,6 @@ canvas {
     100% { transform: rotate(360deg); }
 }
 
-/* Efeitos Especiais Gráficos */
 .screen-shake {
     animation: shake 0.5s infinite;
 }
@@ -317,14 +291,6 @@ canvas {
     animation: glitch 2s infinite;
 }
 
-@keyframes glitch {
-    0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-2px); }
-    40% { transform: translateX(2px); }
-    60% { transform: translateX(-1px); }
-    80% { transform: translateX(1px); }
-}
-
 .tension-overlay {
     position: absolute;
     inset: 0;
@@ -341,7 +307,6 @@ canvas {
     pointer-events: none;
 }
 
-/* Controles Mobile */
 #touch-controls {
     position: absolute;
     inset: 0;
