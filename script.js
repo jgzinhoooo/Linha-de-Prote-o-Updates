@@ -1,3 +1,14 @@
+// === INTEGRAÇÃO CAPACITOR (TELA CHEIA MOBILE) ===
+import { StatusBar } from '@capacitor/status-bar';
+
+window.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await StatusBar.hide();
+    } catch (e) {
+        console.log("Executando no PC/Electron - StatusBar ignorada.");
+    }
+});
+
 // === SISTEMA DE LOCAL STORAGE ===
 function loadSetting(key, defaultVal) { return localStorage.getItem('linhaProtecao_' + key) || defaultVal; }
 function saveSetting(key, value) { localStorage.setItem('linhaProtecao_' + key, value); }
@@ -29,14 +40,14 @@ function acceptTerms() {
 }
 
 // === CONTROLE DE MENUS E FETCH DO GITHUB ===
-function toggleOptions(show) {
+window.toggleOptions = function(show) {
     playClickSound();
     const modal = document.getElementById('options-modal');
     if (show) modal.classList.remove('hidden');
     else modal.classList.add('hidden');
 }
 
-async function toggleLogs(show) {
+window.toggleLogs = async function(show) {
     playClickSound();
     const modal = document.getElementById('logs-modal');
     if (show) {
@@ -101,18 +112,18 @@ for(let i=0; i<60; i++) dustParticles.push({ x: Math.random() * 1920, y: Math.ra
 globalLighting.neonLights = [ { x: 400, y: 300, color: '#ff4444', intensity: 0.6, pulsing: true }, { x: 900, y: 300, color: '#4488ff', intensity: 0.6, pulsing: false }, { x: 1300, y: 300, color: '#ff4444', intensity: 0.6, pulsing: true } ];
 const cars = [ {x: 200, y: 150, w: 350, h: 180}, {x: 600, y: 150, w: 350, h: 180}, {x: 1000, y: 150, w: 350, h: 180}, {x: 1400, y: 150, w: 350, h: 180}, {x: 200, y: 500, w: 350, h: 180}, {x: 600, y: 500, w: 350, h: 180}, {x: 1000, y: 500, w: 350, h: 180}, {x: 1400, y: 500, w: 350, h: 180} ];
 
-function updateVolume(val) { globalVolume = parseFloat(val); saveSetting('volume', val); }
-function updateGraphics(val) { 
+window.updateVolume = function(val) { globalVolume = parseFloat(val); saveSetting('volume', val); }
+window.updateGraphics = function(val) { 
     graphicsQuality = val; saveSetting('graphics', val);
     if (val === "low") { document.getElementById('game-container').classList.remove('chromatic-glitch'); document.getElementById('fear-vignette').style.display = 'none'; }
 }
 
-function updateSpeedMode(val) {
+window.updateSpeedMode = function(val) {
     if (val === "sync") speedMultiplier = 1.0; else if (val === "144") speedMultiplier = 2.4; else if (val === "240") speedMultiplier = 4.0;
     saveSetting('speed', val);
 }
 
-function toggleFullscreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(err => {}); else document.exitFullscreen(); }
+window.toggleFullscreen = function() { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(err => {}); else document.exitFullscreen(); }
 
 let audioCtx, sirenOsc, sirenGain, sirenInterval, menuMusicInterval, elevatorMusicInterval;
 let noteIndex = 0; const muzakNotes = [261.63, 329.63, 392.00, 493.88, 392.00, 329.63]; 
@@ -120,7 +131,7 @@ let noteIndex = 0; const muzakNotes = [261.63, 329.63, 392.00, 493.88, 392.00, 3
 function initAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 
 let menuMusicStarted = false;
-function startMenuMusicOnce() {
+window.startMenuMusicOnce = function() {
     if (menuMusicStarted) return; initAudio(); menuMusicStarted = true;
     menuMusicInterval = setInterval(() => {
         if (gameState !== "menu" || !audioCtx) return;
@@ -191,21 +202,21 @@ function isColliding(x, y, radius, rects) {
     return false;
 }
 
-function checkDoorCode() {
+window.checkDoorCode = function() {
     let code = document.getElementById("door-code").value; playClickSound(); isEasterEgg = (code === "1810"); document.getElementById("keypad-modal").classList.add("hidden"); document.getElementById("door-code").value = "";
     gameState = "room"; whiteBall.x = canvas.width / 2; whiteBall.y = canvas.height - 150; if (isTouchActive) document.getElementById('touch-controls').style.display = 'block'; 
 }
-function closeKeypad() {
+window.closeKeypad = function() {
     playClickSound(); document.getElementById("keypad-modal").classList.add("hidden"); document.getElementById("door-code").value = ""; gameState = "corridor"; if (isTouchActive) document.getElementById('touch-controls').style.display = 'block';
 }
-function callPolice() {
+window.callPolice = function() {
     let code = document.getElementById("phone-code").value; if(code === "180" || code === "190") { playClickSound(); document.getElementById("phone-modal").classList.add("hidden"); document.getElementById("phone-code").value = ""; isInfiniteMode = false; if(isTouchActive) document.getElementById("touch-controls").style.display = "block"; startChase(); } else { document.getElementById("phone-code").value = ""; }
 }
-function startInfiniteEscape() {
+window.startInfiniteEscape = function() {
     playClickSound(); document.getElementById("phone-modal").classList.add("hidden"); document.getElementById("phone-code").value = ""; isInfiniteMode = true; if(isTouchActive) document.getElementById("touch-controls").style.display = "block"; startChase();
 }
 
-function initGame() {
+window.initGame = function() {
     if (menuMusicInterval) { clearInterval(menuMusicInterval); menuMusicInterval = null; }
     initAudio(); playClickSound(); document.getElementById("screen-instructions").classList.add("hidden"); document.getElementById("screen-game").classList.remove("hidden");
     whiteBall.x = 150; whiteBall.y = 540; gameState = "corridor"; lastTime = performance.now(); if (isTouchActive) document.getElementById('touch-controls').style.display = 'block';
@@ -221,12 +232,12 @@ function startElevatorDescent() {
         currentFloor--;
         if (currentFloor <= 0) {
             clearInterval(descentInterval);
-            playDoorSound(true); // Porta abrindo no térreo
+            playDoorSound(true); 
             setTimeout(() => {
                 startElevatorDialogue();
-            }, 800); // Dá 800ms para a porta abrir antes de ele entrar
+            }, 800); 
         }
-    }, 1000); // Desce 1 andar por segundo
+    }, 1000); 
 }
 
 // === ENGINE DE RENDERIZAÇÃO BLINDADA ===
@@ -250,9 +261,7 @@ function loop(currentTime) {
     
     ctx.globalAlpha = 1.0; 
     
-    // ==========================================
     // PASSO 1: DESENHA O CENÁRIO DE FUNDO
-    // ==========================================
     if (gameState.includes("parking") || gameState === "police_arrives") {
         let timeFactor = Date.now(); let isRedLight = (gameState === "parking_chase") && Math.floor(timeFactor / 400) % 2 === 0; 
         ctx.fillStyle = isRedLight ? "#1c0606" : "#07070c"; 
@@ -285,7 +294,6 @@ function loop(currentTime) {
             ctx.fillStyle = "#1a1a26"; ctx.beginPath(); ctx.ellipse(960, 650, 250, 100, 0, 0, Math.PI*2); ctx.fill();
             if (isEasterEgg) { if(graphicsQuality==="high") { ctx.shadowColor = "#0f0"; ctx.shadowBlur = 40; } ctx.fillStyle = "#031203"; ctx.fillRect(1250, 480, 350, 220); ctx.shadowBlur = 0; ctx.fillStyle = "#0f0"; ctx.font = "bold 40px monospace"; ctx.fillText("jgzin.dev", 1300, 560); ctx.font = "20px monospace"; ctx.fillText("> ACESSO AO SISTEMA", 1280, 610); ctx.fillText("> Easter Egg Liberado!", 1280, 650); }
         } else if (gameState === "elevator_closing" || gameState === "elevator_descending" || gameState === "elevator_dialogue") {
-            // Desenha a cena interna do elevador (fechado ou abeto)
             ctx.fillStyle = "#08080f"; ctx.fillRect(0, 0, canvas.width, canvas.height); 
             ctx.fillStyle = "#181822"; ctx.fillRect(400, 350, 60, 380); ctx.fillStyle = "#222"; ctx.fillRect(410, 370, 40, 340);
             ctx.fillStyle = "#ff5555"; ctx.beginPath(); ctx.arc(430, 400, 8, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(430, 440, 8, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(430, 480, 8, 0, Math.PI * 2); ctx.fill();
@@ -294,9 +302,7 @@ function loop(currentTime) {
         }
     }
 
-    // ==========================================
     // PASSO 2: ATUALIZAÇÃO E DESENHO DE PERSONAGENS E EFEITOS
-    // ==========================================
     if (graphicsQuality === "ultra") drawShadows();
     
     if (gameState === "corridor") {
@@ -304,14 +310,13 @@ function loop(currentTime) {
         if (nextX > 40 && nextX < 1880) { if (nextX > 1650 && doorOffset < 70) whiteBall.x = 1650; else whiteBall.x = nextX; }
         if (nextY > 400 && nextY < 680) whiteBall.y = nextY;
         
-        // CORREÇÃO: Trava imediata e chama a cinemática de descida
         if (whiteBall.x >= 1740 && whiteBall.y >= 320 && whiteBall.y <= 720) { 
             whiteBall.x = 1740; 
             gameState = "elevator_closing"; 
             redAnimX = -50; 
             playDoorSound(false); 
             createSparks(whiteBall.x, whiteBall.y, 20); 
-            setTimeout(() => { startElevatorDescent(); }, 1000); // 1 segundo pra fechar a porta e começar a descer
+            setTimeout(() => { startElevatorDescent(); }, 1000); 
         }
     } else if (gameState === "room") {
         let nextX = whiteBall.x + (moveX * whiteBall.speed * deltaTime); let nextY = whiteBall.y + (moveY * whiteBall.speed * deltaTime);
@@ -355,7 +360,6 @@ function loop(currentTime) {
         if (Math.random() > 0.95) createSparks(redBall.x + Math.random() * 40 - 20, redBall.y + Math.random() * 40 - 20, 3);
     }
     
-    // RENDERIZAÇÃO INTELIGENTE DAS BOLINHAS
     if (gameState !== "elevator_dialogue" && gameState !== "elevator_closing" && gameState !== "elevator_descending") {
         ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(whiteBall.x, whiteBall.y, whiteBall.radius, 0, Math.PI * 2); ctx.fill();
     }
@@ -365,16 +369,13 @@ function loop(currentTime) {
     } 
     else if (gameState === "elevator_closing" || gameState === "elevator_descending" || gameState === "elevator_dialogue") {
         
-        // Desenha a bolinha branca na caixa do elevador em todos esses estados
         ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(800, 540, 24, 0, Math.PI * 2); ctx.fill(); 
         
-        // Se estiver descendo, exibe o contador no painel
         if (gameState === "elevator_descending") {
             ctx.fillStyle = "#ff2d3f"; ctx.font = "bold 40px monospace";
             ctx.fillText(currentFloor > 0 ? `ANDAR: 0${currentFloor}` : "TÉRREO", 900, 380);
         }
 
-        // Se chegou ao térreo (diálogo), a bolinha vermelha invade!
         if (gameState === "elevator_dialogue") {
             if (redAnimX < 960) redAnimX += 420 * deltaTime; 
             ctx.fillStyle = "#ff2d3f"; if(graphicsQuality==="high"){ctx.shadowColor="#ff2d3f"; ctx.shadowBlur=15;} 
@@ -388,17 +389,13 @@ function loop(currentTime) {
         ctx.fillStyle = "#000"; ctx.fillRect(p1_x + 15, p1_y - 6, 45, 12); ctx.fillRect(p2_x - 60, p2_y - 6, 45, 12); 
     }
 
-    // ==========================================
     // PASSO 3: DESENHA AS LUZES E PARTICULAS
-    // ==========================================
     if (gameState.includes("parking") && (graphicsQuality === "ultra" || graphicsQuality === "high")) { 
         drawParticles(); 
         if (graphicsQuality === "ultra") drawAdvancedEffects(); 
     }
 
-    // ==========================================
-    // PASSO 4: TEXTOS DA UI (SEMPRE NO TOPO)
-    // ==========================================
+    // PASSO 4: TEXTOS DA UI
     ctx.globalAlpha = 1.0; 
     actionBtn.style.display = "none";
     
