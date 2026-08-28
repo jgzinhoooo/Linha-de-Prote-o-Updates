@@ -1,14 +1,3 @@
-// === INTEGRAÇÃO CAPACITOR (TELA CHEIA MOBILE) ===
-import { StatusBar } from '@capacitor/status-bar';
-
-window.addEventListener('DOMContentLoaded', async () => {
-    try {
-        await StatusBar.hide();
-    } catch (e) {
-        console.log("Executando no PC/Electron - StatusBar ignorada.");
-    }
-});
-
 // === SISTEMA DE LOCAL STORAGE ===
 function loadSetting(key, defaultVal) { return localStorage.getItem('linhaProtecao_' + key) || defaultVal; }
 function saveSetting(key, value) { localStorage.setItem('linhaProtecao_' + key, value); }
@@ -40,14 +29,14 @@ function acceptTerms() {
 }
 
 // === CONTROLE DE MENUS E FETCH DO GITHUB ===
-window.toggleOptions = function(show) {
+function toggleOptions(show) {
     playClickSound();
     const modal = document.getElementById('options-modal');
     if (show) modal.classList.remove('hidden');
     else modal.classList.add('hidden');
 }
 
-window.toggleLogs = async function(show) {
+async function toggleLogs(show) {
     playClickSound();
     const modal = document.getElementById('logs-modal');
     if (show) {
@@ -112,18 +101,18 @@ for(let i=0; i<60; i++) dustParticles.push({ x: Math.random() * 1920, y: Math.ra
 globalLighting.neonLights = [ { x: 400, y: 300, color: '#ff4444', intensity: 0.6, pulsing: true }, { x: 900, y: 300, color: '#4488ff', intensity: 0.6, pulsing: false }, { x: 1300, y: 300, color: '#ff4444', intensity: 0.6, pulsing: true } ];
 const cars = [ {x: 200, y: 150, w: 350, h: 180}, {x: 600, y: 150, w: 350, h: 180}, {x: 1000, y: 150, w: 350, h: 180}, {x: 1400, y: 150, w: 350, h: 180}, {x: 200, y: 500, w: 350, h: 180}, {x: 600, y: 500, w: 350, h: 180}, {x: 1000, y: 500, w: 350, h: 180}, {x: 1400, y: 500, w: 350, h: 180} ];
 
-window.updateVolume = function(val) { globalVolume = parseFloat(val); saveSetting('volume', val); }
-window.updateGraphics = function(val) { 
+function updateVolume(val) { globalVolume = parseFloat(val); saveSetting('volume', val); }
+function updateGraphics(val) { 
     graphicsQuality = val; saveSetting('graphics', val);
     if (val === "low") { document.getElementById('game-container').classList.remove('chromatic-glitch'); document.getElementById('fear-vignette').style.display = 'none'; }
 }
 
-window.updateSpeedMode = function(val) {
+function updateSpeedMode(val) {
     if (val === "sync") speedMultiplier = 1.0; else if (val === "144") speedMultiplier = 2.4; else if (val === "240") speedMultiplier = 4.0;
     saveSetting('speed', val);
 }
 
-window.toggleFullscreen = function() { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(err => {}); else document.exitFullscreen(); }
+function toggleFullscreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(err => {}); else document.exitFullscreen(); }
 
 let audioCtx, sirenOsc, sirenGain, sirenInterval, menuMusicInterval, elevatorMusicInterval;
 let noteIndex = 0; const muzakNotes = [261.63, 329.63, 392.00, 493.88, 392.00, 329.63]; 
@@ -131,7 +120,7 @@ let noteIndex = 0; const muzakNotes = [261.63, 329.63, 392.00, 493.88, 392.00, 3
 function initAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 
 let menuMusicStarted = false;
-window.startMenuMusicOnce = function() {
+function startMenuMusicOnce() {
     if (menuMusicStarted) return; initAudio(); menuMusicStarted = true;
     menuMusicInterval = setInterval(() => {
         if (gameState !== "menu" || !audioCtx) return;
@@ -202,21 +191,24 @@ function isColliding(x, y, radius, rects) {
     return false;
 }
 
-window.checkDoorCode = function() {
+function checkDoorCode() {
     let code = document.getElementById("door-code").value; playClickSound(); isEasterEgg = (code === "1810"); document.getElementById("keypad-modal").classList.add("hidden"); document.getElementById("door-code").value = "";
     gameState = "room"; whiteBall.x = canvas.width / 2; whiteBall.y = canvas.height - 150; if (isTouchActive) document.getElementById('touch-controls').style.display = 'block'; 
 }
-window.closeKeypad = function() {
+
+function closeKeypad() {
     playClickSound(); document.getElementById("keypad-modal").classList.add("hidden"); document.getElementById("door-code").value = ""; gameState = "corridor"; if (isTouchActive) document.getElementById('touch-controls').style.display = 'block';
 }
-window.callPolice = function() {
+
+function callPolice() {
     let code = document.getElementById("phone-code").value; if(code === "180" || code === "190") { playClickSound(); document.getElementById("phone-modal").classList.add("hidden"); document.getElementById("phone-code").value = ""; isInfiniteMode = false; if(isTouchActive) document.getElementById("touch-controls").style.display = "block"; startChase(); } else { document.getElementById("phone-code").value = ""; }
 }
-window.startInfiniteEscape = function() {
+
+function startInfiniteEscape() {
     playClickSound(); document.getElementById("phone-modal").classList.add("hidden"); document.getElementById("phone-code").value = ""; isInfiniteMode = true; if(isTouchActive) document.getElementById("touch-controls").style.display = "block"; startChase();
 }
 
-window.initGame = function() {
+function initGame() {
     if (menuMusicInterval) { clearInterval(menuMusicInterval); menuMusicInterval = null; }
     initAudio(); playClickSound(); document.getElementById("screen-instructions").classList.add("hidden"); document.getElementById("screen-game").classList.remove("hidden");
     whiteBall.x = 150; whiteBall.y = 540; gameState = "corridor"; lastTime = performance.now(); if (isTouchActive) document.getElementById('touch-controls').style.display = 'block';
